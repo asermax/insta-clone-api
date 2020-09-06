@@ -127,6 +127,7 @@ STATIC_URL = '/static/'
 
 # Media
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # DRF
 REST_FRAMEWORK = {
