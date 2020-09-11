@@ -18,9 +18,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from user import views as user_views
 from post import views as post_views
 
 router = routers.DefaultRouter()
+router.register('users', user_views.UserViewSet)
 router.register('posts', post_views.PostViewSet)
 router.register('comments', post_views.CommentViewSet)
 
