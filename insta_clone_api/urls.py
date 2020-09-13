@@ -22,6 +22,7 @@ from post import views as post_views
 
 router = routers.DefaultRouter()
 router.register('posts', post_views.PostViewSet)
+router.register('comments', post_views.CommentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

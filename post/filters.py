@@ -8,3 +8,9 @@ class PostFilterSet(django_filters.FilterSet):
     class Meta:
         model = models.Post
         fields = ('username',)
+
+
+class CommentFilterSet(django_filters.FilterSet):
+    class Meta:
+        model = models.Comment
+        fields = ('post',)

@@ -18,3 +18,13 @@ class Image(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class Comment(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(auth.get_user_model(), on_delete=models.CASCADE, related_name='+')
+    comment = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Comment from {self.user} on {self.post}'

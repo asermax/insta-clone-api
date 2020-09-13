@@ -1,3 +1,4 @@
+from django.contrib import auth
 from rest_framework import serializers
 from . import models
 
@@ -15,3 +16,14 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ('id', 'text', 'create_date', 'user', 'images')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        slug_field='username',
+        queryset=auth.get_user_model().objects.all(),
+    )
+
+    class Meta:
+        model = models.Comment
+        fields = ('id', 'comment', 'create_date', 'user')
