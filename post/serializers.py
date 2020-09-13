@@ -19,11 +19,10 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field='username',
-        queryset=auth.get_user_model().objects.all(),
-    )
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
         model = models.Comment
-        fields = ('id', 'comment', 'create_date', 'user')
+        fields = ('id', 'comment', 'create_date', 'user', 'post')
+        read_only_fields = ('create_date',)
+        extra_kwargs = {'post': {'write_only': True}}

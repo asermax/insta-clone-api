@@ -1,5 +1,5 @@
-from rest_framework import viewsets
-from . import models, serializers, filters
+from rest_framework import viewsets, mixins
+from . import models, serializers, filters, permissions
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
@@ -16,10 +16,11 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class CommentViewSet(viewsets.ReadOnlyModelViewSet):
+class CommentViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
     queryset = models.Comment.objects.all()
     serializer_class = serializers.CommentSerializer
     filterset_class = filters.CommentFilterSet
+    permission_classes = (permissions.AuthenticatedCreation,)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -28,3 +29,6 @@ class CommentViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.none()
 
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
