@@ -6,9 +6,11 @@
 #
 asgiref==3.2.10           # via django
 django-cors-headers==3.5.0  # via -r requirements.in
+django-extra-fields==3.0.0  # via -r requirements.in
 django-filter==2.3.0      # via -r requirements.in
-django==3.1               # via -r requirements.in, django-cors-headers, django-filter, djangorestframework
-djangorestframework==3.11.1  # via -r requirements.in
+django==3.1               # via -r requirements.in, django-cors-headers, django-extra-fields, django-filter, djangorestframework
+djangorestframework==3.11.1  # via -r requirements.in, django-extra-fields
 pillow==7.2.0             # via -r requirements.in
+psycopg2==2.8.6           # via -r requirements.in
 pytz==2020.1              # via django
 sqlparse==0.3.1           # via django

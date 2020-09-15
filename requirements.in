@@ -2,4 +2,6 @@ Django
 djangorestframework
 django-filter
 django-cors-headers
+django-extra-fields
+psycopg2
 Pillow
