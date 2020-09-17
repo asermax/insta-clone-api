@@ -1,5 +1,5 @@
 from django.contrib import auth
-from rest_framework import viewsets, response, status, exceptions, decorators
+from rest_framework import viewsets, response, status, exceptions, decorators, permissions
 from . import serializers
 
 
@@ -39,4 +39,13 @@ class UserViewSet(viewsets.GenericViewSet):
             raise InvalidCredentialsException()
 
         serializer = self.get_serializer(instance=user)
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+    @decorators.action(
+        detail=False,
+        methods=['get'],
+        permission_classes=[permissions.IsAuthenticated],
+    )
+    def me(self, request):
+        serializer = self.get_serializer(instance=self.request.user)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
