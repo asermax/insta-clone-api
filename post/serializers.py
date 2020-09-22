@@ -15,10 +15,11 @@ class PostSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     images = ImageSerializer(many=True)
     likes_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Post
-        fields = ('id', 'text', 'create_date', 'user', 'images', 'likes_count')
+        fields = ('id', 'text', 'create_date', 'user', 'images', 'likes_count', 'comments_count')
 
     def create(self, validated_data):
         images = validated_data.pop('images')

@@ -4,7 +4,10 @@ from . import models, serializers, filters, permissions
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
-    queryset = models.Post.objects.annotate(likes_count=aggregates.Count('likes'))
+    queryset = models.Post.objects.annotate(
+        likes_count=aggregates.Count('likes', distinct=True),
+        comments_count=aggregates.Count('comments', distinct=True),
+    )
     serializer_class = serializers.PostSerializer
     filterset_class = filters.PostFilterSet
     permission_classes = (permissions.AuthenticatedCreation,)
