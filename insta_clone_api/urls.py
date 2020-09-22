@@ -25,6 +25,7 @@ router = routers.DefaultRouter()
 router.register('users', user_views.UserViewSet)
 router.register('posts', post_views.PostViewSet)
 router.register('comments', post_views.CommentViewSet)
+router.register('likes', post_views.LikeViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

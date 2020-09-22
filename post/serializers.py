@@ -14,10 +14,11 @@ class ImageSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     images = ImageSerializer(many=True)
+    likes_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = models.Post
-        fields = ('id', 'text', 'create_date', 'user', 'images')
+        fields = ('id', 'text', 'create_date', 'user', 'images', 'likes_count')
 
     def create(self, validated_data):
         images = validated_data.pop('images')
@@ -35,3 +36,11 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'comment', 'create_date', 'user', 'post')
         read_only_fields = ('create_date',)
         extra_kwargs = {'post': {'write_only': True}}
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+
+    class Meta:
+        model = models.Like
+        fields = ('id', 'user', 'post')

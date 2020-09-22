@@ -14,3 +14,9 @@ class CommentFilterSet(django_filters.FilterSet):
     class Meta:
         model = models.Comment
         fields = ('post',)
+
+
+class LikeFilterSet(django_filters.FilterSet):
+    class Meta:
+        model = models.Like
+        fields = ('post', 'user')
