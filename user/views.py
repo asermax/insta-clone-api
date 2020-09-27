@@ -1,5 +1,5 @@
 from django.contrib import auth
-from rest_framework import viewsets, response, status, exceptions, decorators, permissions
+from rest_framework import viewsets, response, status, exceptions, decorators, permissions, mixins
 from . import serializers
 
 
@@ -9,10 +9,12 @@ class InvalidCredentialsException(exceptions.APIException):
     default_code = 'invalid_credentials'
 
 
-class UserViewSet(viewsets.GenericViewSet):
+class UserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = auth.get_user_model().objects.all()
     serializer_class = serializers.UserSerializer
     login_serializer_class = serializers.LoginSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    lookup_field = 'username'
 
     def get_serializer_class(self, login=False):
         if login:
@@ -25,9 +27,9 @@ class UserViewSet(viewsets.GenericViewSet):
         kwargs['context'] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
 
-    @decorators.action(detail=False, methods=['post'])
+    @decorators.action(detail=False, methods=('post',), permission_classes=(permissions.AllowAny,))
     def login(self, request):
-        login_serializer = self.get_serializer(login=True, data=request.data)
+        login_serializer = self.get_serializer(data=request.data, login=False)
 
         login_serializer.is_valid(raise_exception=True)
         data = login_serializer.validated_data
@@ -41,11 +43,20 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(instance=user)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
-    @decorators.action(
-        detail=False,
-        methods=['get'],
-        permission_classes=[permissions.IsAuthenticated],
-    )
+    @decorators.action(detail=False, methods=('get',))
     def me(self, request):
         serializer = self.get_serializer(instance=self.request.user)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+    @decorators.action(detail=True, methods=('post',))
+    def follow(self, request, username=None):
+        user = self.get_object()
+        follow = request.user.following.create(following=user)
+
+        return response.Response(data={'id': follow.id}, status=status.HTTP_201_CREATED)
+
+    @decorators.action(detail=True, methods=('delete',))
+    def unfollow(self, request, username=None):
+        request.user.following.filter(following__username=username).delete()
+
+        return response.Response(status=status.HTTP_204_NO_CONTENT)

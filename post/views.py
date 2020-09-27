@@ -1,6 +1,7 @@
 from django.db.models import aggregates
 from rest_framework import viewsets, mixins
-from . import models, serializers, filters, permissions
+from insta_clone_api import permissions
+from . import models, serializers, filters
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
