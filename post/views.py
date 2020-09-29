@@ -1,7 +1,7 @@
 from django.db.models import aggregates
 from rest_framework import viewsets, mixins
 from insta_clone_api import permissions
-from . import models, serializers, filters
+from . import models, serializers, filters, pagination
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
@@ -12,11 +12,14 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet, mixins.CreateModelMixin):
     serializer_class = serializers.PostSerializer
     filterset_class = filters.PostFilterSet
     permission_classes = (permissions.AuthenticatedCreation,)
+    pagination_class = pagination.PostPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        if self.action == 'list' and self.request.query_params.get('username', '').strip() == '':
+        if self.action == 'list' \
+                and self.request.query_params.get('username', '').strip() == '' \
+                and self.request.query_params.get('feed', '').strip() == '':
             queryset = queryset.none()
 
         return queryset
